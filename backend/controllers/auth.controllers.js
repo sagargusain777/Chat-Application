@@ -36,13 +36,29 @@ export const  signup= async(req,res)=>{
       profilePic :(gender ==="male")?boyProfilePic:girlProfilePic
       
     })
-    await newUser.save();
 
-    res.status(201).json({message:"User created successfully",newUser})
+    if(newUser){
+      await newUser.save();
+      console.log("User created");
+      return res.status(201).json(
+        {
+          _id:newUser._id,
+          fullName: newUser.fullName,
+          username: newUser.username,
+          gender:newUser.gender
+        }
+      )
+
+    }
+    else{
+      console.log("User not created");
+      return res.status(400).json({message:"User not created"})
+    }
+    
 
 
   }catch(error){
-    console.log(` Error in Creating User: ${error}`);
+    console.log(` Error in SignUp controller: ${error}`);
     res.status(500).json({message:"Internal Server Error"})
   }
 }
